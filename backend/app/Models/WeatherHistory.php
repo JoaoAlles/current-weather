@@ -10,6 +10,11 @@ class WeatherHistory extends Model
     use HasFactory;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * This property defines a "whitelist" of attributes that are allowed
+     * to be assigned using mass-assignment methods like `create()` or `update()`.
+     * It's a security feature to prevent unintended modifications.
      *
      * @var array<int, string>
      */

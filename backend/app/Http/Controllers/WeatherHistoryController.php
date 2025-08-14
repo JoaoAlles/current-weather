@@ -60,4 +60,43 @@ class WeatherHistoryController extends Controller
             return response()->json(['message' => 'Ocorreu um erro interno ao salvar os dados.'], 500);
         }
     }
+
+    public function index(): JsonResponse
+    {
+        try {
+            $history = WeatherHistory::latest()->get();
+            return response()->json($history);
+        } catch (\Exception $e) {
+            Log::error('Erro ao buscar histórico: ' . $e->getMessage());
+            return response()->json(['message' => 'Ocorreu um erro interno ao buscar o histórico.'], 500);
+        }
+    }
+
+    public function compare(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'city1_id' => 'required|integer|exists:weather_histories,id',
+            'city2_id' => 'required|integer|exists:weather_histories,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        try {
+            $city1 = WeatherHistory::findOrFail($request->input('city1_id'));
+            $city2 = WeatherHistory::findOrFail($request->input('city2_id'));
+
+            $comparison = [
+                'city1' => $city1,
+                'city2' => $city2,
+            ];
+
+            return response()->json($comparison);
+
+        } catch (\Exception $e) {
+            Log::error('Erro ao comparar cidades: ' . $e->getMessage());
+            return response()->json(['message' => 'Ocorreu um erro interno ao comparar as cidades.'], 500);
+        }
+    }
 }
