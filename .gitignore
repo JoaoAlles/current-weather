@@ -8,3 +8,4 @@
 /backend/storage/framework/views/*
 /backend/storage/framework/cache/data/*
 /backend/storage/logs/*.log
+/backend/bootstrap/cache/*.php
