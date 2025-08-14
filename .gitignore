@@ -9,3 +9,10 @@
 /backend/storage/framework/cache/data/*
 /backend/storage/logs/*.log
 /backend/bootstrap/cache/*.php
+/frontend/node_modules
+/frontend/build
+/frontend/.env.local
+/frontend/.env.development.local
+/frontend/.env.test.local
+/frontend/.env.production.local
+/frontend/coverage
