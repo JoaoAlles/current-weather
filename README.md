@@ -6,7 +6,7 @@ e permitir a comparação entre localidades.
 
 ## Stack de Tecnologias
 
-*   **Front-end:** React
+*   **Front-end:** React, Axios, Bootstrap
 *   **Back-end:** Laravel
 *   **Banco de Dados:** SQLite
 *   **APIs Externas:**
@@ -20,11 +20,11 @@ O projeto está organizado em uma estrutura de monorepo, com duas pastas princip
 *   `/frontend`: Contém a aplicação React.
 *   `/backend`: Contém a API RESTful em Laravel.
 
-## Como Executar o Projeto (Em Andamento)
+## Como Executar o Projeto
 
 ### Pré-requisitos
 
-*   PHP >= 8.0
+*   PHP >= 8.2
 *   Composer
 *   Node.js e NPM
 
@@ -41,27 +41,47 @@ O projeto está organizado em uma estrutura de monorepo, com duas pastas princip
     ```
 
 3.  **Configure o arquivo de ambiente:**
-    Copie o arquivo de exemplo e gere a chave da aplicação.
+    Copie o arquivo de exemplo, preencha sua chave da API Weatherstack e gere a chave da aplicação.
     ```bash
     cp .env.example .env
+    ```
+    *Abra o arquivo `.env` e adicione sua `WEATHERSTACK_ACCESS_KEY`.*
+
+4.  **Gere a chave da aplicação:**
+    ```bash
     php artisan key:generate
     ```
 
-4.  **Configure o banco de dados:**
-    Este projeto utiliza SQLite para simplificar o ambiente de desenvolvimento. Crie o arquivo do banco de dados:
+5.  **Crie o arquivo do banco de dados e execute as migrações:**
     ```bash
     touch database/database.sqlite
-    ```
-    *Certifique-se de que seu arquivo `.env` está configurado com `DB_CONNECTION=sqlite`.*
-
-5.  **Execute as migrações:**
-    Este comando criará as tabelas no banco de dados.
-    ```bash
     php artisan migrate
     ```
 
-6.  **Inicie o servidor de desenvolvimento:**
+6.  **Inicie o servidor da API:**
     ```bash
     php artisan serve
     ```
-    A API estará disponível em `http://127.0.0.1:8000`.
+    *A API estará disponível em `http://127.0.0.1:8000`.*
+
+---
+
+### 2. Configuração do Front-end (React )
+
+**Abra um segundo terminal** (mantenha o servidor da API rodando no primeiro).
+
+1.  **Navegue até a pasta do front-end:**
+    ```bash
+    cd frontend
+    ```
+
+2.  **Instale as dependências do Node.js:**
+    ```bash
+    npm install
+    ```
+
+3.  **Inicie o servidor do React:**
+    ```bash
+    npm start
+    ```
+    *A aplicação abrirá automaticamente no seu navegador em `http://localhost:3000`.*
