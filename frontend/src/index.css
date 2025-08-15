@@ -1,10 +1,37 @@
 body {
+  background-color: #e7e3e8;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  --custom-purple: #8400cc;
+  --custom-purple-hover: #6a00a3;
+  --custom-purple-focus-ring: rgba(132, 0, 204, 0.25);
+}
+
+.btn-custom-purple {
+  --bs-btn-color: #fff;
+  --bs-btn-bg: var(--custom-purple);
+  --bs-btn-border-color: var(--custom-purple);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--custom-purple-hover);
+  --bs-btn-hover-border-color: var(--custom-purple-hover);
+  --bs-btn-focus-shadow-rgb: 132, 0, 204;
+}
+
+.form-check-input-custom:checked {
+  background-color: var(--custom-purple);
+  border-color: var(--custom-purple);
+}
+
+.form-check-input-custom:focus {
+  border-color: var(--custom-purple-hover);
+  box-shadow: 0 0 0 0.25rem var(--custom-purple-focus-ring);
 }
 
 code {

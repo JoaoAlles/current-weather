@@ -92,7 +92,7 @@ function SearchForm({ onSearch, setIsLoading, setError: setAppError }) {
                         />
                     </div>
                     <div className="col-md-2">
-                        <button type="submit" className="btn btn-primary w-100" disabled={!city}>
+                        <button type="submit" className="btn btn-custom-purple w-100" disabled={!city}>
                             Buscar
                         </button>
                     </div>

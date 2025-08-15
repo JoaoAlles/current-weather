@@ -32,6 +32,11 @@ function ComparisonView({ cities }) {
                         <ul className="list-unstyled text-muted">
                             <li>Umidade: {city1.humidity}%</li>
                             <li>Vento: {city1.wind_speed} km/h</li>
+                            <li style={{ fontSize: '0.8rem' }}>
+                                Pesquisado em: {new Date(city1.created_at).toLocaleString('pt-BR', {
+                                day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                            })}
+                            </li>
                         </ul>
                     </div>
 
@@ -46,6 +51,11 @@ function ComparisonView({ cities }) {
                         <ul className="list-unstyled text-muted">
                             <li>Umidade: {city2.humidity}%</li>
                             <li>Vento: {city2.wind_speed} km/h</li>
+                            <li style={{ fontSize: '0.8rem' }}>
+                                Salvo em: {new Date(city2.created_at).toLocaleString('pt-BR', {
+                                day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+                            })}
+                            </li>
                         </ul>
                     </div>
                 </div>
