@@ -1,5 +1,6 @@
-import React, { useState } from 'react'; // 1. Importe o useState
+import React, { useState } from 'react';
 import SearchForm from './components/SearchForm';
+import WeatherDisplay from './components/WeatherDisplay';
 import './App.css';
 
 function App() {
@@ -15,7 +16,7 @@ function App() {
         <div className="container mt-5">
             <div className="row justify-content-center">
                 <div className="col-md-10 col-lg-8">
-                    <h1 className="text-center mb-4">Desafio de Previsão do Tempo</h1>
+                    <h1 className="text-center mb-4">Previsão do Tempo</h1>
 
                     <SearchForm
                         onSearch={handleSearch}
@@ -23,8 +24,17 @@ function App() {
                         setError={setError}
                     />
 
-                    {isLoading && <p className="text-center">Buscando...</p>}
+                    {isLoading && (
+                        <div className="text-center mt-4">
+                            <div className="spinner-border text-primary" role="status">
+                                <span className="visually-hidden">Buscando...</span>
+                            </div>
+                        </div>
+                    )}
                     {error && <div className="alert alert-danger mt-4">{error}</div>}
+                    {weatherData && <WeatherDisplay key={weatherData.queried_at} data={weatherData} />}
+
+                    <WeatherDisplay data={weatherData} />
                 </div>
             </div>
         </div>
