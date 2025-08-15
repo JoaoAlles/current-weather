@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import apiClient from '../api/axiosConfig';
 
-function WeatherDisplay({ data }) {
+function WeatherDisplay({ data, onSaveSuccess }) {
     const [isSaved, setIsSaved] = useState(false);
     const [saveError, setSaveError] = useState(null);
 
@@ -11,18 +11,17 @@ function WeatherDisplay({ data }) {
 
     const handleSave = async () => {
         if (isSaved) return;
-
         setSaveError(null);
 
         try {
             await apiClient.post('/history', data);
             setIsSaved(true);
+            onSaveSuccess();
         } catch (error) {
             console.error("Erro ao salvar no histórico:", error);
             setSaveError("Não foi possível salvar a consulta. Tente novamente.");
         }
     };
-
     const {
         city_name,
         region,

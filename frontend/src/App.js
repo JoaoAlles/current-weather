@@ -1,12 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import apiClient from './api/axiosConfig';
 import SearchForm from './components/SearchForm';
 import WeatherDisplay from './components/WeatherDisplay';
-import './App.css';
+import HistoryList from './components/HistoryList';
 
 function App() {
     const [weatherData, setWeatherData] = useState(null);
+    const [history, setHistory] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    const fetchHistory = async () => {
+        try {
+            const response = await apiClient.get('/history');
+            setHistory(response.data);
+        } catch (error) {
+            console.error("Erro ao buscar histórico:", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchHistory();
+    }, []);
+
+    const handleSaveSuccess = () => {
+        fetchHistory();
+    };
 
     const handleSearch = (data) => {
         setWeatherData(data);
@@ -32,9 +51,16 @@ function App() {
                         </div>
                     )}
                     {error && <div className="alert alert-danger mt-4">{error}</div>}
-                    {weatherData && <WeatherDisplay key={weatherData.queried_at} data={weatherData} />}
 
-                    <WeatherDisplay data={weatherData} />
+                    {weatherData && (
+                        <WeatherDisplay
+                            key={weatherData.queried_at}
+                            data={weatherData}
+                            onSaveSuccess={handleSaveSuccess}
+                        />
+                    )}
+
+                    <HistoryList history={history} />
                 </div>
             </div>
         </div>
