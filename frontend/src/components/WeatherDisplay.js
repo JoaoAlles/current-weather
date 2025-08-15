@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import apiClient from '../api/axiosConfig';
+import { translateWeather } from '../utils/translations';
 
 function WeatherDisplay({ data, onSaveSuccess }) {
     const [isSaved, setIsSaved] = useState(false);
@@ -65,7 +66,7 @@ function WeatherDisplay({ data, onSaveSuccess }) {
                         <img src={weather_icon_url} alt={weather_description} style={{ width: '80px' }} />
                         <div className="ms-3">
                             <h1 className="display-4 fw-bold">{temperature}°C</h1>
-                            <p className="lead mb-0">{weather_description}</p>
+                            <p className="lead mb-0">{translateWeather(weather_description)}</p>
                         </div>
                     </div>
 

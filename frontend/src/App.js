@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import apiClient from './api/axiosConfig';
+import ComparisonView from './components/ComparisonView';
 import SearchForm from './components/SearchForm';
 import WeatherDisplay from './components/WeatherDisplay';
 import HistoryList from './components/HistoryList';
@@ -9,6 +10,7 @@ function App() {
     const [history, setHistory] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [selectedCities, setSelectedCities] = useState([]);
 
     const fetchHistory = async () => {
         try {
@@ -30,6 +32,34 @@ function App() {
     const handleSearch = (data) => {
         setWeatherData(data);
     };
+
+    const handleSelectCity = (cityId) => {
+        setSelectedCities(prevSelected => {
+            if (prevSelected.includes(cityId)) {
+                return prevSelected.filter(id => id !== cityId);
+            } else {
+                if (prevSelected.length < 2) {
+                    return [...prevSelected, cityId];
+                }
+            }
+            return prevSelected;
+        });
+    };
+
+    const citiesToCompare = history.filter(city => selectedCities.includes(city.id));
+
+    const handleDeleteHistory = async (id) => {
+        setHistory(prevHistory => prevHistory.filter(item => item.id !== id));
+
+        try {
+            await apiClient.delete(`/history/${id}`);
+        } catch (error) {
+            console.error("Erro ao excluir item:", error);
+            await fetchHistory();
+            setError("Não foi possível excluir o item. Tente novamente.");
+        }
+    };
+
 
     return (
         <div className="container mt-5">
@@ -60,7 +90,14 @@ function App() {
                         />
                     )}
 
-                    <HistoryList history={history} />
+                    <HistoryList
+                        history={history}
+                        selectedCities={selectedCities}
+                        onSelectCity={handleSelectCity}
+                        onDelete={handleDeleteHistory}
+                    />
+
+                    {citiesToCompare.length === 2 && <ComparisonView cities={citiesToCompare} />}
                 </div>
             </div>
         </div>

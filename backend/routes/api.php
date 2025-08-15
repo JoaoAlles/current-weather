@@ -14,3 +14,6 @@ Route::get('/history', [WeatherHistoryController::class, 'index']);
 
 // Rota para comparar o clima de duas cidades
 Route::get('/compare', [WeatherHistoryController::class, 'compare']);
+
+// Rota para deletar uma pesquisa do histórico
+Route::delete('/history/{id}', [WeatherHistoryController::class, 'destroy']);

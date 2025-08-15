@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\WeatherHistory;
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -76,7 +78,7 @@ class WeatherHistoryController extends Controller
         try {
             $history = WeatherHistory::create($request->all());
             return response()->json($history, 201);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Erro ao salvar no banco de dados: ' . $e->getMessage());
             return response()->json(['message' => 'Ocorreu um erro interno ao salvar os dados.'], 500);
         }
@@ -87,7 +89,7 @@ class WeatherHistoryController extends Controller
         try {
             $history = WeatherHistory::latest()->get();
             return response()->json($history);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Erro ao buscar histórico: ' . $e->getMessage());
             return response()->json(['message' => 'Ocorreu um erro interno ao buscar o histórico.'], 500);
         }
@@ -114,9 +116,25 @@ class WeatherHistoryController extends Controller
             ];
 
             return response()->json($comparison);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error('Erro ao comparar cidades: ' . $e->getMessage());
             return response()->json(['message' => 'Ocorreu um erro interno ao comparar as cidades.'], 500);
+        }
+    }
+
+    public function destroy(string $id): JsonResponse
+    {
+        try {
+            $historyItem = WeatherHistory::findOrFail($id);
+            $historyItem->delete();
+
+            return response()->json(null, 204);
+
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Registro não encontrado.'], 404);
+        } catch (Exception $e) {
+            Log::error('Erro ao excluir do histórico: ' . $e->getMessage());
+            return response()->json(['message' => 'Ocorreu um erro interno ao excluir o registro.'], 500);
         }
     }
 }
