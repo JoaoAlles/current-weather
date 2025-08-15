@@ -14,7 +14,7 @@ use Carbon\Carbon;
 class WeatherHistoryController extends Controller
 {
 
-    public function fetchAndStore(Request $request): JsonResponse
+    public function fetch(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'city' => 'required|string|max:255',
@@ -32,7 +32,7 @@ class WeatherHistoryController extends Controller
             'query' => $city,
         ] );
 
-        if ($response->failed() || isset($response->json()['success']) && $response->json()['success'] === false) {
+        if ($response->failed() || (isset($response->json()['success']) && $response->json()['success'] === false)) {
             $error = $response->json()['error'] ?? ['info' => 'Erro desconhecido ao contatar a API de clima.'];
             Log::error('Erro na API Weatherstack: ', $error);
             return response()->json(['message' => 'Não foi possível obter os dados do clima para a cidade informada.'], 404);
@@ -40,21 +40,42 @@ class WeatherHistoryController extends Controller
 
         $data = $response->json();
 
+        $formattedData = [
+            'city_name' => $data['location']['name'],
+            'region' => $data['location']['region'],
+            'country' => $data['location']['country'],
+            'temperature' => $data['current']['temperature'],
+            'weather_description' => $data['current']['weather_descriptions'][0],
+            'weather_icon_url' => $data['current']['weather_icons'][0],
+            'humidity' => $data['current']['humidity'],
+            'wind_speed' => $data['current']['wind_speed'],
+            'queried_at' => Carbon::createFromTimestamp($data['location']['localtime_epoch'])->toDateTimeString(),
+        ];
+
+        return response()->json($formattedData);
+    }
+
+    public function store(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'city_name' => 'required|string',
+            'region' => 'required|string',
+            'country' => 'required|string',
+            'temperature' => 'required|integer',
+            'weather_description' => 'required|string',
+            'weather_icon_url' => 'required|url',
+            'humidity' => 'required|integer',
+            'wind_speed' => 'required|integer',
+            'queried_at' => 'required|date',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
         try {
-            $history = WeatherHistory::create([
-                'city_name' => $data['location']['name'],
-                'region' => $data['location']['region'],
-                'country' => $data['location']['country'],
-                'temperature' => $data['current']['temperature'],
-                'weather_description' => $data['current']['weather_descriptions'][0],
-                'weather_icon_url' => $data['current']['weather_icons'][0],
-                'humidity' => $data['current']['humidity'],
-                'wind_speed' => $data['current']['wind_speed'],
-                'queried_at' => Carbon::createFromTimestamp($data['location']['localtime_epoch'])->toDateTimeString(),
-            ]);
-
+            $history = WeatherHistory::create($request->all());
             return response()->json($history, 201);
-
         } catch (\Exception $e) {
             Log::error('Erro ao salvar no banco de dados: ' . $e->getMessage());
             return response()->json(['message' => 'Ocorreu um erro interno ao salvar os dados.'], 500);
@@ -93,7 +114,6 @@ class WeatherHistoryController extends Controller
             ];
 
             return response()->json($comparison);
-
         } catch (\Exception $e) {
             Log::error('Erro ao comparar cidades: ' . $e->getMessage());
             return response()->json(['message' => 'Ocorreu um erro interno ao comparar as cidades.'], 500);
