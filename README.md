@@ -83,3 +83,7 @@ Para garantir um projeto escalável e de fácil manutenção, foi aplicado os se
 2.  **Instale as dependências:** `npm install`
 3.  **Inicie o servidor de desenvolvimento:** `npm start`
     *   *A aplicação abrirá em `http://localhost:3000`.*
+
+## Demonstração
+
+![Demonstração do projeto](midia/demo.gif)
